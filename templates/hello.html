@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mycss.css')}}">
+    <title></title>
+</head>
+<body>
+
+    <h1>マネフォワード エンジニア総会demo</h1>
+
+    <p>簡単なウェブアプリです。自分の写真をアップロードして、API経由で自分の顔を採点します</p>
+
+    <form action="/" method="POST" enctype="multipart/form-data">
+
+        <label for="user_file">ここに自分の写真をuploadします</label>
+        <br></br>
+        <input type="file" name="user_file">
+        <br></br>
+        <button type="submit">Upload</button>
+
+    </form>
+    <img src="{{ user_image }}" max-height="500" max-width="500" alt="User Image">
+
+
+    <a href="{{url_for( 'face_scan')}}">Analyze</a>
+    <p>{{ analyze_str }}</p>
+
+
+</body>
+
+</html>
