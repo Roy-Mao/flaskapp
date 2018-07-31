@@ -1,6 +1,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mycss.css')}}">
     <title></title>
 </head>
@@ -8,23 +12,20 @@
 
     <h1>マネフォワード エンジニア総会demo</h1>
 
-    <p>簡単なウェブアプリです。自分の写真をアップロードして、API経由で自分の顔を採点します</p>
+    <h5>簡単なウェブアプリです。自分の写真をアップロードして、API経由で自分の顔を採点します</h5>
 
     <form action="/" method="POST" enctype="multipart/form-data">
 
-        <label for="user_file">ここに自分の写真をuploadします</label>
-        <br></br>
-        <input type="file" name="user_file">
-        <br></br>
-        <button type="submit">Upload</button>
+        <label for="user_file">写真をアップロードください</label>
+        <input type="file" name="user_file" id="file_btn">
+        <button type="submit" class="btn btn-primary">Upload</button>
 
     </form>
     <img src="{{ user_image }}" max-height="500" max-width="500" alt="User Image">
 
 
-    <a href="{{url_for( 'face_scan')}}">Analyze</a>
-    <p>{{ analyze_str }}</p>
-
+    <div class="btn_block"><a href="{{url_for( 'face_scan')}}" class="btn btn-primary">Analyze</a></div>
+    <div id="ana_block">{{ analyze_str }}</div>
 
 </body>
 

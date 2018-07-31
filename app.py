@@ -2,19 +2,22 @@ from flask import Flask, render_template, request, redirect, session
 from aip import AipFace
 from werkzeug.utils import secure_filename
 import boto3, os, botocore, pdb, sys, base64, requests, ssl, json
-from config import S3_KEY, S3_SECRET, S3_BUCKET, APP_ID, API_KEY, SECRET_KEY
+#from config import S3_KEY, S3_SECRET, S3_BUCKET, APP_ID, API_KEY, SECRET_KEY
 
 
 app = Flask(__name__)
-app.debug = True
-app.config.from_object("config")
+#app.debug = True
+app.config['SECRET_KEY'] = os.environ['APP_SECRET_KEY']
 
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=S3_KEY,
-    aws_secret_access_key=S3_SECRET
+    aws_access_key_id = os.environ['S3_KEY'],
+    aws_secret_access_key =  os.environ['S3_SECRET']
 )
 
+APP_ID = os.environ['APP_ID']
+API_KEY =  os.environ['API_KEY']
+SECRET_KEY = os.environ['SECRET_KEY']
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -24,7 +27,7 @@ def allowed_file(filename):
 
 @app.route('/', methods=["GET"])
 def hello_wold():
-    return render_template('hello.html', user_image = "https://s3-ap-northeast-1.amazonaws.com/hakone930313/Screen_Shot_2018-06-29_at_2.16.21_PM.png", analyze_str = "no content")
+    return render_template('hello.html', user_image = "https://s3-ap-northeast-1.amazonaws.com/hakone930313/money_logo.png", analyze_str = "no content")
 
 
 
@@ -37,8 +40,7 @@ def upload_file():
         return "Please select a file"
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
-        full_filename = upload_file_to_s3(file, app.config["S3_BUCKET"])
-        python
+        full_filename = upload_file_to_s3(file, os.environ['S3_BUCKET'])
         session["image_path"] = full_filename
         return render_template("hello.html", user_image = full_filename, analyze_str = "no result")
     else:
@@ -46,8 +48,10 @@ def upload_file():
 
 @app.route('/analyze', methods=["GET"])
 def face_scan():
-    image = session.get('image_path')
-    imageType = "URL"
+    img_url = session.get('image_path')
+    imageType = "BASE64"
+    img_base64 = base64.b64encode(requests.get(img_url).content)
+    image = img_base64.decode()
 
     options = {
         "face_field":  "age,gender,glasses,beauty,expression,face_shape",
@@ -75,7 +79,7 @@ def face_scan():
         e = sys.exc_info()[0]
         print ( "Unexpected Error: %s" % e )
         analyze_str = "Unexpected Error: %s" % e
-    return render_template("hello.html", user_image = image, analyze_str = analyze_str)
+    return render_template("hello.html", user_image = img_url, analyze_str = analyze_str)
 
 
 def upload_file_to_s3(file, bucket_name, acl="public-read"):
@@ -92,4 +96,4 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
     except Exception as e:
         print("Something Happend: ", e)
         return e
-    return "{}{}".format(app.config["S3_LOCATION"], file.filename)
+    return "{}{}".format(os.environ['S3_LOCATION'], file.filename)

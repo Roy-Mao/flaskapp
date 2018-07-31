@@ -1,6 +1,51 @@
+body {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+}
+
 img{
     width:100%;
     height:100%;
-    max-width:250px;
-    max-height:250px;
+    max-width:180px;
+    max-height:180px;
+    margin-bottom: 2em;
+}
+
+h1{
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+h5{
+  text-align: center;
+  margin-bottom: 3em;
+}
+
+p{
+  text-align: center;
+  margin-bottom: 3em;
+}
+
+form{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center
+}
+
+input[type='file']{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding-left: 180px;
+  margin-bottom: 2em;
+  margin-top: 2em;
+}
+
+#ana_block{
+  margin-top: 30px;
 }
